@@ -83,21 +83,38 @@ class Graph:
                 for next_edge in self.vertices[vertex]:
                     stack.push(next_edge)
 
-    def dft_recursive(self, starting_vertex,stack,visited):
+    def dft_recursive(self, starting_vertex,visited):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         This should be done using recursion.
         """
-        # TODO        
-        stack.push(starting_vertex)
-        if stack.size() > 0:
-            vertex = stack.pop()
-            if vertex not in visited:
-                visited.add(vertex)
-                print(vertex)
-                for next_edge in self.vertices[vertex]:
-                    self.dft_recursive(next_edge,stack,visited)
+        # TODO  
+             
+        visited.add(starting_vertex)
+        print(starting_vertex) 
+        for next_edge in self.vertices[starting_vertex]:
+            if next_edge not in visited:
+                self.dft_recursive(next_edge,visited)
+
+#this code works too
+    # def dft_recursive(self, starting_vertex,stack,visited):
+    #     """
+    #     Print each vertex in depth-first order
+    #     beginning from starting_vertex.
+    #     This should be done using recursion.
+    #     """
+    #     # TODO        
+    #     stack.push(starting_vertex)
+    #     if stack.size() > 0:
+    #         vertex = stack.pop()
+    #         if vertex not in visited:
+    #             visited.add(vertex)
+    #             print(vertex)
+    #             for next_edge in self.vertices[vertex]:
+    #                 self.dft_recursive(next_edge,stack,visited)
+
+
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -105,20 +122,38 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        # TODO
-        array1=[]
-        prev=destination_vertex
-        for i in self.vertices:
-            print(f'vertices i: {i} , {self.vertices[i]}')
-            for j in self.vertices[i]:
-                print(f'vertices {i} pointing to edge:{j}')
-                if j == prev:
-                    array1.append(j)
-            prev=i
+        qq = Queue()
+        visited = set()
+        qq.enqueue([starting_vertex])
 
-        print(f'array1 {array1}') 
+        while qq.size()>0:
+            path = qq.dequeue()
+            vertex = path[-1]
+
+            if vertex not in visited:
+                # Here is the point to so whetever we're trying to accomplish
+                if vertex == destination_vertex:
+                    return path
+                visited.add(vertex)
+                for next_vert in self.vertices[vertex]:
+                    new_path = list(path)
+                    new_path.append(next_vert)
+                    qq.enqueue(new_path)
 
 
+        # Still working on it
+        # # TODO
+        # array1=[]
+        # prev=destination_vertex
+        # for i in self.vertices:
+        #     print(f'vertices i: {i} , {self.vertices[i]}')
+        #     for j in self.vertices[i]:
+        #         print(f'vertices {i} pointing to edge:{j}')
+        #         if j == prev:
+        #             array1.append(j)
+        #     prev=i
+
+        # print(f'array1 {array1}') 
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -128,21 +163,44 @@ class Graph:
         """
         # TODO
         stack = Stack()
-        stack.push(starting_vertex)
         visited = set()
-        while stack.size() >0 :
-            vertex = stack.pop()
+        stack.push([starting_vertex])
+
+        while stack.size()>0:
+            path = stack.pop()
+            vertex = path[-1]
+
             if vertex not in visited:
-                visited.add(vertex)
-                print(vertex)
+                # Here is the point to so whetever we're trying to accomplish
                 if vertex == destination_vertex:
-                    break
-                for next_edge in self.vertices[vertex]:
-                    stack.push(next_edge)
+                    return path
+                visited.add(vertex)
+                for next_vert in self.vertices[vertex]:
+                    new_path = list(path)
+                    new_path.append(next_vert)
+                    stack.push(new_path)
 
 
-
-
+    #this code works too
+    # def dfs(self, starting_vertex, destination_vertex):
+    #     """
+    #     Return a list containing a path from
+    #     starting_vertex to destination_vertex in
+    #     depth-first order.
+    #     """
+    #     # TODO
+    #     stack = Stack()
+    #     stack.push(starting_vertex)
+    #     visited = set()
+    #     while stack.size() >0 :
+    #         vertex = stack.pop()
+    #         if vertex not in visited:
+    #             visited.add(vertex)
+    #             print(vertex)
+    #             if vertex == destination_vertex:
+    #                 break
+    #             for next_edge in self.vertices[vertex]:
+    #                 stack.push(next_edge)
 
 
 if __name__ == '__main__':
@@ -209,7 +267,9 @@ if __name__ == '__main__':
         1, 2, 4, 6, 3, 5, 7
     '''
     print('dft recursive')
-    graph.dft_recursive(1,stack=Stack(),visited=set())
+    # graph.dft_recursive(1,stack=Stack(),visited=set())
+    graph.dft_recursive(1,visited=set())
+
     print('\n')
 
     '''
@@ -225,4 +285,5 @@ if __name__ == '__main__':
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
+    print('DFS')
     print(graph.dfs(1, 6))
