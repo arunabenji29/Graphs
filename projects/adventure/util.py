@@ -26,4 +26,3 @@ class Stack():
     def print_stack(self):
         for i in range(len(self.stack)):
             print(self.stack[i])
-
